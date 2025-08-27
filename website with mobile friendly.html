@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Employment Corp - Microsoft Outlook (2025)</title>
+<style>
+  /* ---- Reset-ish ---- */
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: url("background.jpg") no-repeat center center fixed;
+    background-size: cover; /* stretch to fill */
+    font: 13px/1.2 Tahoma, Verdana, "MS Sans Serif", Arial, sans-serif;
+    color: #000;
+  }
+
+  /* ---- Window Chrome ---- */
+  .win98-window {
+    width: min(1100px, 96vw);
+    height: min(720px, 92vh);
+    margin: 2vh auto;
+    background: #c0c0c0; /* classic gray */
+    border: 2px solid #000;
+    box-shadow:
+      inset -1px -1px 0 #000,
+      inset 1px 1px 0 #fff,
+      inset -2px -2px 0 #7f7f7f,
+      inset 2px 2px 0 #dfdfdf;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .titlebar {
+    background: linear-gradient(#ff0000, #a30000);
+    color: #fff;
+    padding: 3px 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  .titlebar .icon {
+    width: 16px; height: 16px;
+    background: #fff;
+    border: 1px solid #000; display: grid; place-items: center;
+    font-weight: bold; color: #000080; font-size: 11px;
+  }
+  .titlebar .title {
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #000;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .titlebar .controls { margin-left: auto; display: flex; gap: 4px; }
+  .ctrl {
+    width: 18px; height: 18px;
+    background: #c0c0c0;
+    box-shadow:
+      inset -1px -1px 0 #000,
+      inset 1px 1px 0 #fff,
+      inset -2px -2px 0 #7f7f7f,
+      inset 2px 2px 0 #dfdfdf;
+    display: grid; place-items: center;
+    font-weight: bold; cursor: default;
+  }
+
+  /* ---- Menu + Toolbar ---- */
+  .menubar {
+    background: #c0c0c0; padding: 2px 6px; display: flex; gap: 12px;
+    border-bottom: 1px solid #7f7f7f;
+  }
+  .menubar span { text-decoration: underline; }
+  .toolbar {
+    background: #c0c0c0; padding: 4px 6px; display: flex; gap: 6px; align-items: center;
+    border-bottom: 1px solid #7f7f7f;
+  }
+  .toolbtn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 6px; cursor: default;
+    box-shadow:
+      inset -1px -1px 0 #7f7f7f,
+      inset 1px 1px 0 #fff,
+      inset -2px -2px 0 #000,
+      inset 2px 2px 0 #dfdfdf;
+    background: #c0c0c0;
+  }
+  .toolbtn:active {
+    box-shadow:
+      inset 1px 1px 0 #7f7f7f,
+      inset -1px -1px 0 #fff,
+      inset 2px 2px 0 #000,
+      inset -2px -2px 0 #dfdfdf;
+  }
+  .toolsep { width: 1px; height: 22px; background: #7f7f7f; margin: 0 4px; }
+
+  /* Tiny monochrome toolbar icons (inline SVG via CSS) */
+  .ico { width: 16px; height: 16px; display: inline-block; background-repeat: no-repeat; background-size: 16px 16px; image-rendering: pixelated; }
+  .ico-inbox { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><rect x="1" y="5" width="14" height="10" fill="none" stroke="black"/><path d="M1 10h5l2 3 2-3h5" stroke="black" fill="none"/></svg>');}
+  .ico-new { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><rect x="1" y="1" width="14" height="14" fill="none" stroke="black"/><path d="M8 4v8M4 8h8" stroke="black"/></svg>');}
+  .ico-reply { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M7 4l-5 4 5 4V9h3a4 4 0 0 1 4 4" fill="none" stroke="black"/></svg>');}
+  .ico-delete { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><rect x="4" y="4" width="8" height="10" fill="none" stroke="black"/><path d="M3 4h10M6 2h4" stroke="black"/></svg>');}
+  .ico-print { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><rect x="3" y="2" width="10" height="5" fill="none" stroke="black"/><rect x="2" y="7" width="12" height="7" fill="none" stroke="black"/><rect x="5" y="9" width="6" height="3" fill="none" stroke="black"/></svg>');}
+
+  /* ---- Main panes ---- */
+  .client {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: 1fr 38%;
+    grid-template-areas:
+      "folders list"
+      "folders preview";
+    height: 100%;
+  }
+
+  /* Folder tree */
+  .folders {
+    grid-area: folders;
+    background: #c0c0c0;
+    border-right: 1px solid #7f7f7f;
+    padding: 6px;
+    overflow: auto;
+  }
+  .group { margin-bottom: 8px; }
+  .group-title {
+    font-weight: bold; margin: 6px 0 4px; display: flex; align-items: center; gap: 6px;
+  }
+  .twisty { width: 9px; height: 9px; border: 1px solid #000; background: #c0c0c0; display: inline-grid; place-items: center; font-size: 9px; }
+  .folder {
+    padding: 2px 4px; margin: 1px 0; display: flex; align-items: center; gap: 6px; cursor: default;
+  }
+  .folder.active { background: #ff0000; color: #fff; }
+
+  /* Message list */
+  .list {
+    grid-area: list;
+    background: #fff;
+    border-bottom: 1px solid #7f7f7f;
+    overflow: auto;
+  }
+  .list table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+  .list th, .list td {
+    border-bottom: 1px solid #e5e5e5; padding: 6px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .list th { background: #dfdfdf; border-bottom-color: #b0b0b0; text-align: left; font-weight: normal; }
+  .row { cursor: default; }
+  .row.unread td { font-weight: bold; }
+  .row.selected td { background: #ff0000; color: #fff; }
+
+  /* Preview */
+  .preview {
+    grid-area: preview;
+    background: #fff;
+    overflow: auto;
+  }
+  .headers { border-bottom: 1px solid #dfdfdf; padding: 6px 10px; background: #f5f5f5; }
+  .headers div { margin: 2px 0; }
+  .body { padding: 12px 14px; line-height: 1.35; }
+  .btn {
+    display: inline-block; margin-top: 8px; padding: 6px 10px; text-decoration: none; color: #000;
+    background: #c0c0c0;
+    box-shadow:
+      inset -1px -1px 0 #7f7f7f,
+      inset 1px 1px 0 #fff,
+      inset -2px -2px 0 #000,
+      inset 2px 2px 0 #dfdfdf;
+  }
+  .meta {
+    font-size: 11px; color: #333; margin-top: 10px;
+    border-top: 1px dotted #ccc; padding-top: 8px;
+  }
+
+  /* Footer status bar */
+  .statusbar {
+    height: 22px; background: #c0c0c0; display: flex; align-items: center; gap: 10px; padding: 0 6px;
+    border-top: 1px solid #7f7f7f; font-size: 12px;
+  }
+  .status-cell {
+    flex: 0 0 auto; padding: 2px 6px;
+    box-shadow:
+      inset -1px -1px 0 #7f7f7f,
+      inset 1px 1px 0 #fff,
+      inset -2px -2px 0 #000,
+      inset 2px 2px 0 #dfdfdf;
+    background: #c0c0c0;
+  }
+  .status-flex { flex: 1 1 auto; }
+
+  /* Accessibility + Selection look */
+  :focus { outline: 1px dotted #000; outline-offset: -1px; }
+  ::selection { background: #000080; color: #fff; }
+
+  /* ===== Mobile/responsive upgrades ===== */
+
+  /* Larger tap targets */
+  .toolbtn, .btn { min-height: 36px; line-height: 1.3; }
+  .list td { padding: 10px 8px; }  /* easier tapping */
+
+  /* Use dynamic viewport height when supported */
+  @supports (height: 100dvh) {
+    .win98-window { height: 100dvh; }
+  }
+
+  /* Mobile-only styles */
+  @media (max-width: 700px) {
+    body { font-size: 14px; }
+
+    .win98-window {
+      width: 100vw;
+      height: 100dvh;   /* safer on mobile */
+      margin: 0;
+      border-width: 0;
+      box-shadow: none;
+    }
+
+    .toolbar { flex-wrap: wrap; gap: 8px; }
+    .mobile-toggle {
+      display: inline-flex;
+      padding: 6px 10px;
+    }
+
+    /* Layout: stack list over preview; folders become overlay */
+    .client {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 55%;
+      grid-template-areas:
+        "list"
+        "preview";
+    }
+
+    .folders {
+      position: fixed;
+      inset: 40px 0 0 0;           /* below title/toolbar */
+      width: 100%;
+      max-height: calc(100dvh - 40px);
+      background: #c0c0c0;
+      transform: translateY(-110%);
+      transition: transform 0.2s ease-in-out;
+      z-index: 9999;
+      border-right: none;
+      border-bottom: 1px solid #7f7f7f;
+      padding-bottom: 12px;
+    }
+    .folders.open { transform: translateY(0); }
+
+    /* Message list: drop the Received column, allow wrapping */
+    .list table { table-layout: auto; }
+    .list th:nth-child(3),
+    .list td:nth-child(3) { display: none; }
+    .list th, .list td { white-space: normal; }
+
+    .body { padding: 12px; }
+
+    .statusbar { height: 28px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+  <div class="win98-window" role="application" aria-label="Employment Corp - Microsoft Outlook">
+    <div class="titlebar">
+      <div class="icon" aria-hidden="true">e</div>
+      <div class="title">Employment Corp - Microsoft Outlook</div>
+      <div class="controls">
+        <div class="ctrl" title="Minimize">_</div>
+        <div class="ctrl" title="Maximize">□</div>
+        <div class="ctrl" title="Close">×</div>
+      </div>
+    </div>
+
+    <div class="menubar" aria-label="Menu">
+      <div><span>F</span>ile</div>
+      <div><span>E</span>dit</div>
+      <div><span>V</span>iew</div>
+      <div><span>G</span>o</div>
+      <div><span>T</span>ools</div>
+      <div><span>M</span>essage</div>
+      <div><span>H</span>elp</div>
+    </div>
+
+    <div class="toolbar" aria-label="Toolbar">
+      <div class="toolbtn"><i class="ico ico-new" aria-hidden="true"></i> New</div>
+      <div class="toolbtn"><i class="ico ico-reply" aria-hidden="true"></i> Reply</div>
+      <div class="toolbtn"><i class="ico ico-delete" aria-hidden="true"></i> Delete</div>
+      <div class="toolsep" aria-hidden="true"></div>
+      <div class="toolbtn"><i class="ico ico-print" aria-hidden="true"></i> Print</div>
+      <div class="toolsep" aria-hidden="true"></div>
+      <div class="toolbtn"><i class="ico ico-inbox" aria-hidden="true"></i> Inbox</div>
+
+      <!-- Mobile folders toggle -->
+      <button class="toolbtn mobile-toggle" type="button" onclick="toggleFolders()" aria-controls="folders" aria-expanded="false">
+        ☰ Folders
+      </button>
+
+      <div style="margin-left:auto; opacity:.8;">Connected to: EMPLOYMENT CORP MAIL</div>
+    </div>
+
+    <div class="client">
+      <!-- Folder Pane -->
+      <aside class="folders" id="folders" aria-label="Folders">
+        <div class="group">
+          <div class="group-title"><span class="twisty">–</span> <span>Employment Corp</span></div>
+          <div class="folder active" role="button" tabindex="0" data-folder="inbox">📥 Inbox</div>
+          <div class="folder" role="button" tabindex="0" data-folder="sent">📤 Sent Items</div>
+          <div class="folder" role="button" tabindex="0" data-folder="drafts">📝 Drafts</div>
+          <div class="folder" role="button" tabindex="0" data-folder="hr">👔 Compliance</div>
+          <div class="folder" role="button" tabindex="0" data-folder="it">🖥 Employee Alerts</div>
+          <div class="folder" role="button" tabindex="0" data-folder="archive">🗄 Archive</div>
+        </div>
+
+        <div class="group">
+          <div class="group-title"><span class="twisty">+</span> <span>Public Folders</span></div>
+          <div class="folder" role="button" tabindex="0" data-folder="bulletins">📌 Chatroom</div>
+          <div class="folder" role="button" tabindex="0" data-folder="opportunities">💼 Internal Opportunities</div>
+        </div>
+      </aside>
+
+      <!-- Message List -->
+      <section class="list" aria-label="Message list">
+        <table aria-describedby="table-desc">
+          <caption id="table-desc" style="position:absolute;left:-9999px;">Employment Corp mailbox</caption>
+          <thead>
+            <tr>
+              <th style="width: 36%;">From</th>
+              <th style="width: 44%;">Subject</th>
+              <th style="width: 20%;">Received</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </section>
+
+      <!-- Preview Pane -->
+      <section class="preview" aria-label="Preview">
+        <div class="headers" id="headers">
+          <div><strong>From:</strong> <span id="h-from">—</span></div>
+          <div><strong>To:</strong> You &lt;you@employment.corp&gt;</div>
+          <div><strong>Subject:</strong> <span id="h-subject">—</span></div>
+          <div><strong>Received:</strong> <span id="h-date">—</span></div>
+        </div>
+        <div class="body" id="body">
+          <p>Select a message to preview.</p>
+        </div>
+      </section>
+    </div>
+
+    <div class="statusbar" role="status" aria-live="polite">
+      <div class="status-cell">Inbox</div>
+      <div class="status-flex">Big Fear © Employment Corp Intranet, 1998</div>
+      <div class="status-cell" id="count">0 items, 0 unread</div>
+    </div>
+  </div>
+
+<script>
+  // --- Faux mailbox data (Employment Corp facade -> Big Fear content) ---
+  const MAIL = [
+    {
+      from: 'CEO <Alice@employment.corp>',
+      subject: '"Welcome": Big Fear Compliance Briefing',
+      date: 'Mon 09:12',
+      unread: true,
+      body: `
+        <p>Dear employee,</p>
+        <p> I am contractually obligated to welcome you to your new role as employee.
+        <em>welcome</em>.</p>
+        it is <strong>suggested</strong> you join the intranet mailing list
+        it is also <strong>strongly suggested</strong> you inform your next of kin.
+        <ul></ul>
+        <a class="btn" href="https://google.com" target="_blank" rel="noopener noreferrer">Employment Corp Intranet</a>
+        <div class="meta">You are ours now • Employment Corp</div>
+      `
+    },
+    {
+      from: 'Mother <Mother@employment.corp>',
+      subject: 'Cognitive Alignment Program (CAP): Career Day',
+      date: 'Sun 18:44',
+      unread: true,
+      body: `
+        <p>Reminder: Mother reminds employees that all members of employment corporation are required to listen to Big Fear debut EP "Career Day" .</p>
+        <p><strong>Notice:</strong> your compliance is mandatory. Your co-operation is appreciated.</p>
+        <a class="btn" href="https://open.spotify.com/album/55vqb1IG9g5ts102fKJ6mH?si=_gBFxexDTIup1DXKz2Wx6g" target="_blank" rel="noopener noreferrer">Listen now</a>
+        <div class="meta">Facility bulletin • Level -1</div>
+      `
+    },
+    {
+      from: 'Tickets <payroll@employment.corp>',
+      subject: 'Direct Deposit: Bonus = Concert Tickets',
+      date: 'Thu 08:21',
+      unread: false,
+      body: `
+        <p>Great news. You can resrve your place at your next <strong>"Governance Indoctrination Gathering [GIG]"</strong>.</p>
+        <a class="btn" href="https://www.bandsintown.com/a/15605806-big-fear" target="_blank" rel="noopener noreferrer">Buy G.I.G. Tickets</a>
+        <div class="meta"> • Approved by CEO</div>
+      `
+    },
+    {
+      from: 'M.E.R.C.H.  <compliance@employment.corp>',
+      subject: 'Managed Employee Resource Clothing Hub',
+      date: 'Wed 11:05',
+      unread: false,
+      body: `
+        <p>Uniform compliance is mandatory. failure to comply will result in being written up</p>
+        <p><strong>No Exceptions</strong></p>
+        <a class="btn" href="https://bigfear.bandcamp.com/merch" target="_blank" rel="noopener noreferrer">MERCH</a>
+        <div class="meta">Compliance Finding • Case closed</div>
+      `
+    }
+  ];
+
+  // --- Secrets (band CTAs) ---
+  const SECRETS = {
+    tickets: `
+      <h3>Big Fear — Tickets</h3>
+      <p>Paper slips, inked hands, late buses. Authentic chaos.</p>
+      <ul>
+        <li><a href="#" onclick="fakeNav('https://example.com/big-fear/tickets')">Get Tickets</a></li>
+        <li><a href="#" onclick="fakeNav('https://example.com/big-fear/dates')">Show Dates</a></li>
+      </ul>
+      <div class="meta">You didn’t find this on the intranet.</div>
+    `,
+    listen: `
+      <h3>Big Fear — Listen</h3>
+      <p>Queue the sirens. Static kisses melody.</p>
+      <ul>
+        <li><a href="#" onclick="fakeNav('https://example.com/big-fear/listen')">Play “Payday Siren”</a></li>
+        <li><a href="#" onclick="fakeNav('https://example.com/big-fear/playlist')">Starter Playlist</a></li>
+      </ul>
+      <div class="meta">Headphones recommended. HR not responsible.</div>
+    `,
+    merch: `
+      <h3>Big Fear — Merch</h3>
+      <p>Uniforms for beautiful disobedience.</p>
+      <ul>
+        <li><a href="#" onclick="fakeNav('https://example.com/big-fear/merch')">Shop Merch</a></li>
+        <li><a href="#" onclick="fakeNav('https://example.com/big-fear/patches')">Security Patches (literally)</a></li>
+      </ul>
+      <div class="meta">All sizes. Zero apologies.</div>
+    `,
+    rsvp: `
+      <h3>Big Fear — RSVP</h3>
+      <p>Warehouse echoes. Fluorescent crescendos. Sign your name in feedback.</p>
+      <ul>
+        <li><a href="#" onclick="fakeNav('https://example.com/big-fear/rsvp')">RSVP</a></li>
+      </ul>
+      <div class="meta">Employment status not required.</div>
+    `
+  };
+
+  // --- Render message list ---
+  const tbody = document.getElementById('rows');
+  const count = document.getElementById('count');
+  const headers = {
+    from: document.getElementById('h-from'),
+    subject: document.getElementById('h-subject'),
+    date: document.getElementById('h-date')
+  };
+  const body = document.getElementById('body');
+
+  function renderList() {
+    tbody.innerHTML = '';
+    MAIL.forEach((m, i) => {
+      const tr = document.createElement('tr');
+      tr.className = 'row' + (m.unread ? ' unread' : '');
+      tr.setAttribute('tabindex', '0');
+      tr.addEventListener('click', () => select(i));
+      tr.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') select(i); });
+      tr.innerHTML = `
+        <td title="${m.from}">${m.from}</td>
+        <td title="${m.subject}">${m.subject}</td>
+        <td>${m.date}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+    updateCount();
+    select(0);
+  }
+
+  function select(index) {
+    [...tbody.children].forEach((row, i) => row.classList.toggle('selected', i === index));
+    const m = MAIL[index];
+    if (m.unread) { m.unread = false; updateRowRead(index); updateCount(); }
+    headers.from.textContent = m.from;
+    headers.subject.textContent = m.subject;
+    headers.date.textContent = m.date;
+    body.innerHTML = m.body;
+  }
+
+  function updateRowRead(index) {
+    const row = tbody.children[index];
+    row.classList.remove('unread');
+  }
+
+  function updateCount() {
+    const unread = MAIL.filter(m => m.unread).length;
+    count.textContent = `${MAIL.length} items, ${unread} unread`;
+  }
+
+  // Fake navigation (keeps page self-contained)
+  function fakeNav(url) {
+    alert('This would open: ' + url + '\n(Links are sandboxed in this demo.)');
+  }
+
+  function reveal(key) {
+    body.innerHTML += `<div class="meta" style="margin-top:12px;border-top:1px dotted #ccc;padding-top:8px;">${SECRETS[key] || 'Nothing to see here.'}</div>`;
+  }
+
+  // Mobile: toggle folders overlay
+  function toggleFolders() {
+    const f = document.getElementById('folders');
+    const isOpen = f.classList.toggle('open');
+    const btn = document.querySelector('.mobile-toggle');
+    if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+
+  // Auto-close folders after selecting one (mobile)
+  document.addEventListener('click', (e) => {
+    const f = document.getElementById('folders');
+    if (!f) return;
+    if (e.target.closest('.folders .folder')) f.classList.remove('open');
+  });
+
+  // Keyboard shortcuts (retro-ish)
+  document.addEventListener('keydown', (e) => {
+    if (e.altKey && !e.shiftKey && !e.ctrlKey) {
+      if (e.key.toLowerCase() === 'i') alert('Inbox already selected.');
+    }
+  });
+
+  // Init
+  renderList();
+</script>
+</body>
+</html>
